@@ -1,22 +1,51 @@
 <!-- Results Page -->
 {{ block "results-page" . }}
-<div class="relative h-[300px]">
-    <img src="images/Banner.jpeg" class="absolute top-0 w-full h-auto max-w-full z-[-1]">
-    <form hx-post="/search" hx-swap="innerHTML" hx-target="#root" class="grid place-items-center h-full">
-        <div id="searchbar">
-            <input class="border-2 border-gray-400 px-6 py-3 text-2xl w-full" type="text" name="query" value="{{ .Query }}">
+<div class="relative overflow-hidden {{ if not .Query }}h-screen{{ else }}h-[300px]{{ end }} transition-all duration-500 ease-in-out">
+    <!-- Background Banner -->
+    <img 
+        src="images/Banner.jpeg" 
+        alt="Search Banner" 
+        class="absolute top-0 w-full h-full object-cover z-[-1] transition-all duration-500 ease-in-out {{ if .Query }}h-[300px]{{ else }}h-0{{ end }}"
+    >
+    
+    <!-- Search Form -->
+    <form hx-post="/search" hx-swap="innerHTML" hx-target="#root" class="grid place-items-center h-full z-10 {{ if not .Query }}justify-center{{ end }} transition-all duration-500 ease-in-out">
+        <div id="searchbar" class="flex w-11/12 max-w-6xl md:w-3/4 bg-white rounded-lg shadow-md overflow-hidden mx-auto {{ if not .Query }}max-w-[600px]{{ end }}">
+            <!-- Search Input -->
+            <input 
+                class="px-6 py-4 text-lg md:text-2xl flex-grow outline-none border-none"
+                type="text" 
+                placeholder="Begin your Search Here" 
+                name="query" 
+                value="{{ .Query }}"
+            >
         </div>
+        <h1 class="text-white text-4xl text-center w-full transition-all duration-500 ease-in-out {{ if not .Query }}opacity-0{{ else }}opacity-100{{ end }}">
+            <span class="hidden sm:inline">Searching for "{{ .Query }}"</span>
+            <span class="sm:hidden">Finding "{{ .Query }}"</span>
+        </h1>
     </form>
 </div>
-<div class="grid grid-cols-[1fr_3fr] bg-white">
-    {{  template "sidecolumn-nohtmx" . }}
+
+<!-- Main Content -->
+{{ if .Query }}
+<div class="grid grid-cols-1 md:grid-cols-[1fr_3fr] bg-white w-11/12 max-w-6xl mx-auto opacity-100 transition-opacity duration-500 ease-in-out">
+    {{ template "sidecolumn-nohtmx" . }}
     {{ template "results" . }}
 </div>
+{{ else }}
+<!-- Hide the rest of the content when query is null, animated fade-out -->
+<div class="opacity-0 pointer-events-none transition-opacity duration-500 ease-in-out">
+    {{ template "sidecolumn-nohtmx" . }}
+    {{ template "results" . }}
+</div>
+{{ end }}
+
 {{end}}
 
 <!-- Results Section -->
 {{ block "results" . }}
-<div id="results-container" class="space-y-6">
+<div id="results-container" class="space-y-6 p-6">
     {{ range .Results }}
     {{ template "result" . }}
     {{end}}
@@ -25,11 +54,10 @@
 
 <!-- Individual Result Partial -->
 {{ block "result" . }}
-<div class="flex items-start space-x-6 p-4">
+<div class="flex items-start space-x-4 p-4 border-b border-gray-200 last:border-b-0">
     <div>
         <h3 class="text-lg font-semibold">{{ .Title }}</h3>
-        <p class="text-gray-600">{{ .Excerpt }}</p>
+        <p class="text-gray-600 mt-4">{{ .Excerpt }}</p>
     </div>
 </div>
 {{end}}
-

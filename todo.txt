@@ -1,0 +1,15 @@
+SEARCH PAGE
+-add back button
+-fix styling of info card
+-add highlights
+-fix styling of side pannel
+
+-add show more for mobile
+-add show filter button
+
+
+HOME PAGE
+-import background
+-fix styling of search bar and text
+-add copy writting
+-add animation to search page
