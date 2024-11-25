@@ -5,6 +5,7 @@ import (
 	"log"
 
 	"github.com/aws/aws-sdk-go-v2/service/kendra"
+	"github.com/aws/aws-sdk-go-v2/service/kendra/types"
 
 	"github.com/DSSD-Madison/gmu/internal"
 )
@@ -27,6 +28,12 @@ type KendraResults struct {
 	Results     []KendraResult
 	Query       string
 	Count       int
+}
+
+type KendraSuggestions struct {
+	SuggestionOutput kendra.GetQuerySuggestionsOutput
+	Suggestions      []string
+	Suggestion       types.SuggestionTextWithHighlights
 }
 
 func queryOutputToResults(out kendra.QueryOutput) KendraResults {
@@ -62,4 +69,31 @@ func MakeQuery(query string) KendraResults {
 	results := queryOutputToResults(*out)
 	results.Query = query
 	return results
+}
+
+func querySuggestionsOutputToSuggestions(out kendra.GetQuerySuggestionsOutput) KendraSuggestions {
+	suggestions := KendraSuggestions{
+		SuggestionOutput: out,
+		Suggestions:      make([]string, 0),
+	}
+
+	for _, item := range out.Suggestions {
+		suggestions.Suggestions = append(suggestions.Suggestions, *item.Value.Text.Text)
+	}
+
+	return suggestions
+}
+
+func GetSuggestions(query string) KendraSuggestions {
+	kendraQuery := kendra.GetQuerySuggestionsInput{
+		IndexId:   &indexId,
+		QueryText: &query,
+	}
+	out, err := client.GetQuerySuggestions(context.TODO(), &kendraQuery)
+	if err != nil {
+		log.Printf("Kendra Suggestions Query Failed %+v", err)
+	}
+
+	suggestions := querySuggestionsOutputToSuggestions(*out)
+	return suggestions
 }

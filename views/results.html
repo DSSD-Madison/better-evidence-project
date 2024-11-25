@@ -12,12 +12,19 @@
         hx-swap="innerHTML">
         <form hx-post="/search">
             <div id="searchbar" class="flex relative">
-                <input id="searchquery" class="border-2 border-gray-400 px-6 py-3 text-2xl w-full" type="text" name="query" value="{{ . }}">
+                <input id="searchquery"
+                    class="border-2 border-gray-400 px-6 py-3 text-2xl w-full"
+                    type="text" name="query"
+                    hx-post="/search/suggestions"
+                    value="{{ . }}"
+                    hx-trigger="input changed delay:250ms"
+                    hx-target="#suggestions"
+                    hx-swap="innserHTML">
                 {{ template "indicator" . }}
             </div>
         </form>
     </div>
-</div>
+<div id="suggestions" class="bg-white"></div>
 <div id="grid-container" class="grid grid-cols-[1fr_3fr] bg-white"></div>
 {{end}}
 
@@ -32,13 +39,21 @@
     <div id="formwrapper" class="grid place-items-center h-full">
         <form id="searchform" hx-post="/search">
             <div id="searchbar" class="flex relative">
-                <input class="border-2 border-gray-400 px-6 py-3 text-2xl w-full" type="text" name="query" value="{{ .Query }}">
+                <input id="searchquery"
+                    class="border-2 border-gray-400 px-6 py-3 text-2xl w-full"
+                    type="text" name="query"
+                    hx-post="/search/suggestions"
+                    value="{{ .Query }}"
+                    hx-trigger="input changed delay:250ms"
+                    hx-target="#suggestions"
+                    hx-swap="innserHTML">
                 {{ template "indicator" . }}
             </div>
         </form>
     </div>
 </div>
 
+<div id="suggestions" class="bg-white"></div>
 <div id="grid-container" class="grid grid-cols-[1fr_3fr] bg-white">
     {{ template "sidecolumn-nohtmx" . }}
     <div id="results-container" class="space-y-6">

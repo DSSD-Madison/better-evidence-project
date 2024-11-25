@@ -18,6 +18,14 @@ func fetchSearchPage(c echo.Context) error {
 	return c.Render(http.StatusOK, "results-init", query)
 }
 
+func SearchSuggestions(c echo.Context) error {
+	query := c.FormValue("query")
+	if len(query) < 3 {
+		return c.String(http.StatusBadRequest, "Error 400, could not get query from request.")
+	}
+	suggestions := models.GetSuggestions(query)
+	return c.Render(http.StatusOK, "suggestions", suggestions)
+}
 func Search(c echo.Context) error {
 	query := c.FormValue("query")
 	if len(query) < MinQueryLengh {
