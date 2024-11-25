@@ -3,11 +3,17 @@
 <div class="relative h-[300px]">
     <img src="images/Banner.jpeg" class="absolute top-0 w-full h-auto max-w-full z-[-1]">
     <form hx-post="/search" hx-swap="innerHTML" hx-target="#root" class="grid place-items-center h-full">
-        <div id="searchbar">
-            <input class="border-2 border-gray-400 px-6 py-3 text-2xl w-full" type="text" name="query" value="{{ .Query }}">
+        <div>
+            <input id="searchbar" class="border-2 border-gray-400 px-6 py-3 text-2xl w-full"
+                type="text" name="query" value="{{ .Query }}"
+                hx-post="/search/suggestions"
+                hx-trigger="input changed delay:250ms"
+                hx-target="#suggestions"
+                hx-swap="innerHTML">
         </div>
     </form>
 </div>
+<div id="suggestions" class="bg-white"></div>
 <div class="grid grid-cols-[1fr_3fr] bg-white">
     {{  template "sidecolumn-nohtmx" . }}
     {{ template "results" . }}

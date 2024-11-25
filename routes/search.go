@@ -8,6 +8,15 @@ import (
 	"github.com/DSSD-Madison/gmu/models"
 )
 
+func SearchSuggestions(c echo.Context) error {
+	query := c.FormValue("query")
+	if len(query) < 3 {
+		return c.String(http.StatusBadRequest, "Error 400, could not get query from request.")
+	}
+	suggestions := models.GetSuggestions(query)
+	return c.Render(http.StatusOK, "suggestions", suggestions)
+}
+
 func Search(c echo.Context) error {
 	query := c.FormValue("query")
 	if len(query) < 3 {

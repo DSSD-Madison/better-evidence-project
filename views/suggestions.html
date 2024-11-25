@@ -1,0 +1,33 @@
+{{ block "suggestions-js" . }}
+<script>
+    // Listen for HTMX content swap
+    document.body.addEventListener('htmx:afterSwap', function(event) {
+        // Check if swapped content contains necessary element
+        const inputElement = document.getElementById('searchbar');
+        if (inputElement && !inputElement.hasAttribute('data-listener-attached')) {
+            // Attach listener to element after it is loaded
+            inputElement.addEventListener('htmx:configRequest', function(event) {
+                // Trigger POST only if value is >= 3
+                const inputValue = event.target.value;
+                if (inputValue.length < 3) {
+                    event.preventDefault();
+                } else {
+                    event.detail.parameters['query'] = inputValue;
+                }
+            });
+
+            inputElement.setAttribute('data-listener-attached', 'true');
+        }
+    });
+</script>
+{{end}}
+
+{{ block "suggestions" . }}
+    {{ range .Suggestions }}
+    {{ template "suggestion" . }}
+    {{end}}
+{{end}}
+
+{{ block "suggestion" . }}
+    <p>{{ . }}</p>
+{{end}}
