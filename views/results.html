@@ -10,17 +10,6 @@
 </div>
 {{end}}
 
-{{ block "update-search" . }}
-<div id="formwrapper" class="grid place-items-center h-full" hx-swap-oob="true">
-    <form hx-post="/search" hx-target="#results-container" hx-swap="innerHTML">
-        <div id="searchbar" class="flex relative">
-            <input id="searchquery" class="border-2 border-gray-400 px-6 py-3 text-2xl w-full" type="text" name="query" value="{{ .Query }}">
-            {{ template "indicator" . }}
-        </div>
-    </form>
-</div>
-{{ end }}
-
 <!-- Individual Result Partial -->
 {{ define "result-card" }}
 <div class="flex items-start space-x-6 p-4">

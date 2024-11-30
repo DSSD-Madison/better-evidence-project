@@ -41,6 +41,10 @@ func NewTemplate() *Templates {
 		"views/sidecolumn.html",
 		"views/indicator.html",
 	))
+	tmpl["search-init"] = template.Must(template.ParseFiles(
+		"views/search-init.html",
+		"views/indicator.html",
+	))
 
 	return &Templates{
 		templates: tmpl,
